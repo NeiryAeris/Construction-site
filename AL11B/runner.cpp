@@ -14,16 +14,17 @@ int main()
         cin >> input.x >> input.y >> input.z;
         points.push_back(input);
     }
-    
+
     // Define an orthogonal system in R^3
-    OrthogonalSystem system = {
+    OrthogonalSystem systemXY = {
         {1.0, 0.0, 0.0},
         {0.0, 1.0, 0.0},
         {0.0, 0.0, 1.0}};
 
     // Project the points from R^3 to R^2
-    vector<Point2D> XYprojected = projectPoints(points, system);
-
+    vector<Point2D> XYprojected = projectPoints(points, systemXY);
+    //Fetch first point
+    Point2D starting_point = find_lowest_y_highest_x(XYprojected);
     // Print the projected points
     for (const auto &point : XYprojected)
     {
