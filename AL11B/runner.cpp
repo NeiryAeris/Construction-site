@@ -23,7 +23,7 @@ int main()
 
     // Project the points from R^3 to R^2
     vector<Point2D> XYprojected = projectPoints(points, systemXY);
-    //Fetch first point
+    //Fetch first point(could say this is yi*)
     Point2D starting_point = find_lowest_y_highest_x(XYprojected);
     // Print the projected points
     for (const auto &point : XYprojected)
