@@ -97,3 +97,41 @@ OrthogonalSystem get_d1_d2(const array<double, 3> &d3)
 
     return d;
 }
+// Finding starry Y
+Point2D* find_y_star_star(Point2D* y_star, std::vector<Point2D*> Y) {
+    Point2D* y_star_star = nullptr;
+    for (Point2D* p : Y) {
+        if (p->y == y_star->y && p->x != y_star->x) {
+            continue;
+        }
+        if (y_star_star == nullptr) {
+            y_star_star = p;
+        } else {
+            double D = Determinant(y_star, y_star_star, p);//this is where errors occur
+            if (D >= 0) {
+                y_star_star = p;
+            }
+        }
+    }
+    return y_star_star;
+}
+
+Point2D find_y_star_star(Point2D y_star, std::vector<Point2D> Y) {
+    Point2D y_star_star;
+    bool y_star_star_initialized = false;
+    for (Point2D p : Y) {
+        if (p.y == y_star.y && p.x != y_star.x) {
+            continue;
+        }
+        if (!y_star_star_initialized) {
+            y_star_star = p;
+            y_star_star_initialized = true;
+        } else {
+            double D = Determinant(y_star, y_star_star, p);
+            if (D >= 0) {
+                y_star_star = p;
+            }
+        }
+    }
+    return y_star_star;
+}
