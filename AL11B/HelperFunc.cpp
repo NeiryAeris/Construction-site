@@ -48,3 +48,9 @@ Point2D find_lowest_y_highest_x(const vector<Point2D>& points) {
     }
     return lowest_y;
 }
+
+// Define the function D(y1, y2, y3) = det([y1; y2; y3])
+double Determenant(Point2D y1, Point2D y2, Point2D y3)
+{
+    return y1.x * y2.y + y2.x * y3.y + y3.x * y1.y - y3.x * y2.y - y1.x * y3.y - y2.x * y1.y;
+}
