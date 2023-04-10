@@ -54,3 +54,46 @@ double Determenant(Point2D y1, Point2D y2, Point2D y3)
 {
     return y1.x * y2.y + y2.x * y3.y + y3.x * y1.y - y3.x * y2.y - y1.x * y3.y - y2.x * y1.y;
 }
+//Picking orthogonal system
+OrthogonalSystem get_d1_d2(const array<double, 3> &d3)
+{
+    OrthogonalSystem d;
+    d.d1.fill(0);
+    d.d2.fill(0);
+    d.d3.fill(0);
+
+    // Case 1: d3[1] = d3[2] = 0
+    if (d3[1] == 0 && d3[2] == 0)
+    {
+        d.d1[1] = 1; // set d1=(010)
+        d.d2[2] = 1; // set d2=(001)
+    }
+    // Case 2: d3[1] = 0 and d3[2] != 0
+    else if (d3[1] == 0 && d3[2] != 0)
+    {
+        d.d1[1] = 1;
+        d.d2[0] = 1;
+        d.d2[1] = -d3[0] / d3[2];
+    }
+    // Case 3: d3[1]!=0 and d3[2] = 0
+    else if (d3[1] != 0 && d3[2] == 0)
+    {
+        d.d1[2] = 1;
+        d.d2[0] = 1;
+        d.d2[1] = -d3[0] / d3[1];
+    }
+    // Case 4: d3[1] != 0 and d3[2] != 0
+    else
+    {
+        d.d1[1] = -d3[2] / d3[1];
+        d.d1[2] = 1;
+        double denom = d3[1] * d3[1] + d3[2] * d3[2];
+        d.d2[0] = 1;
+        d.d2[1] = -d3[0] * d3[1] / denom;
+        d.d2[2] = -d3[0] * d3[2] / denom;
+    }
+
+    d.d3 = d3;
+
+    return d;
+}
