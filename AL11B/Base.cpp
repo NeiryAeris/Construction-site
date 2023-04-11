@@ -4,10 +4,12 @@
 using namespace std;
 
 struct Point3D {
+    int tag_number;
     double x, y, z;
 };
 
 struct Point2D {
+    int tag_number2D;
     double x, y;
 };
 
