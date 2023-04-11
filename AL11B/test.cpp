@@ -1,54 +1,53 @@
-#include <bits/stdc++.h>
+#include "Base.cpp"
+#include "HelperFunc.cpp"
 
-using namespace std;
-
-struct Point
+vector<Point2D> rotate_and_translate(vector<Point2D> &points, double angle, double dx, double dy)
 {
-    double x, y;
-};
+    double sin_a = std::sin(angle);
+    double cos_a = std::cos(angle);
 
-double cross_product(Point p, Point q, Point r)
-{
-    double pq_x = q.x - p.x;
-    double pq_y = q.y - p.y;
-    double pr_x = r.x - p.x;
-    double pr_y = r.y - p.y;
-    return pq_x * pr_y - pq_y * pr_x;
-}
-
-bool is_on_right(vector<Point> points, Point p, Point q)
-{
-    for (Point r : points)
+    for (auto &p : points)
     {
-        if (r.x != p.x && r.y != p.y && r.x != q.x && r.y != q.y)
-        {
-            double cp = cross_product(p, q, r);
-            if (cp >= 0)
-            {
-                return false;
-            }
-        }
+        double x_new = p.x * cos_a - p.y * sin_a + dx;
+        double y_new = p.x * sin_a + p.y * cos_a + dy;
+
+        p.x = x_new;
+        p.y = y_new;
     }
-    return true;
 }
 
-int main() {
-    vector<Point> points = {{0, 0}, {1, 1}, {2, 2}, {3, 3}, {4, 4}};
-    Point edge_p, edge_q;
+std::vector<Point2D> find_face(std::vector<Point2D> X)
+{
+    std::vector<Point2D> Y = X;
+    Point2D y_star = find_lowest_y_highest_x(Y);
+    Point2D y_star_star = find_y_star_star(y_star, Y);
+    std::vector<int> I_star = find_I_star(Y, y_star, y_star_star);
 
-    for (Point p : points) {
-        for (Point q : points) {
-            if (p.x != q.x || p.y != q.y) {
-                if (is_on_right(points, p, q)) {
-                    edge_p = p;
-                    edge_q = q;
-                    break;
-                }
-            }
+    while (true)
+    {
+        vector<Point2D> xi_star;
+        for (int i : I_star)
+        {
+            xi_star.push_back(Y[i]);
+        }
+
+        if (xi_star.size() == 1)
+        {
+            Point2D d1(1, 0), d2(0, 1), d3 = y_star_star - y_star;
+            Y = rotate_and_translate(Y, d1, d2, d3);
+            y_star = find_lowest_y_highest_x(Y);
+            y_star_star = find_y_star_star(y_star, Y);
+            I_star = find_I_star(Y, y_star, y_star_star);
+        }
+        else if (xi_star.size() == 2)
+        {
+            std::vector<Point2D> face_edges = find_face_edges(Y, I_star);
+            return face_edges;
+        }
+        else
+        {
+            // Invalid input, return empty vector
+            return std::vector<Point2D>();
         }
     }
-
-    cout << "The edge on the right side is (" << edge_p.x << ", " << edge_p.y << ") to (" << edge_q.x << ", " << edge_q.y << ")" << endl;
-
-    return 0;
 }
